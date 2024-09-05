@@ -23,13 +23,14 @@ public class ClienteDao extends AbstractBaseDao{
             }
         }
         return cliente;
-
     }
 
     public void save(Cliente cliente) {
         ClienteEntity entity = new ClienteEntity(cliente);
         getInMemoryDatabase().put(entity.getId(), entity);
     }
+
+
 
     @Override
     protected String getEntityName() {

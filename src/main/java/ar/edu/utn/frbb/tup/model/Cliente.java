@@ -1,11 +1,10 @@
 package ar.edu.utn.frbb.tup.model;
 
-import ar.edu.utn.frbb.tup.controller.ClienteDto;
+import ar.edu.utn.frbb.tup.controller.dto.ClienteDto;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 public class Cliente extends Persona{
@@ -13,6 +12,7 @@ public class Cliente extends Persona{
     private TipoPersona tipoPersona;
     private String banco;
     private LocalDate fechaAlta;
+    @JsonManagedReference
     private Set<Cuenta> cuentas = new HashSet<>();
 
     public Cliente() {
@@ -20,6 +20,7 @@ public class Cliente extends Persona{
     }
     public Cliente(ClienteDto clienteDto) {
         super(clienteDto.getDni(), clienteDto.getApellido(), clienteDto.getNombre(), clienteDto.getFechaNacimiento());
+        this.tipoPersona = TipoPersona.fromString(clienteDto.getTipoPersona()); // Convertir el String a TipoPersona
         fechaAlta = LocalDate.now();
         banco = clienteDto.getBanco();
     }

@@ -1,21 +1,34 @@
 package ar.edu.utn.frbb.tup.model;
 
-import java.time.LocalDateTime;
+import ar.edu.utn.frbb.tup.controller.dto.CuentaDto;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
+import java.time.LocalDate;
 import java.util.Random;
 
 public class Cuenta {
     private long numeroCuenta;
-    LocalDateTime fechaCreacion;
-    int balance;
+    LocalDate fechaCreacion;
+    double balance;
     TipoCuenta tipoCuenta;
     Cliente titular;
     TipoMoneda moneda;
 
     public Cuenta() {
-        this.numeroCuenta = new Random().nextLong();
+        this.numeroCuenta = Math.abs(new Random().nextLong()); // Asegúrate de que el número sea único
         this.balance = 0;
-        this.fechaCreacion = LocalDateTime.now();
+        this.fechaCreacion = LocalDate.now();
     }
+
+    public Cuenta(CuentaDto cuentaDto) {
+        this.tipoCuenta = TipoCuenta.fromString(cuentaDto.getTipoCuenta());
+        this.moneda = TipoMoneda.fromString(cuentaDto.getMoneda());
+        this.fechaCreacion = LocalDate.now();
+        this.balance = 0;
+        this.numeroCuenta = Math.abs(new Random().nextLong()); // Asegúrate de que el número sea único
+    }
+
+
 
     public Cliente getTitular() {
         return titular;
@@ -24,7 +37,6 @@ public class Cuenta {
     public void setTitular(Cliente titular) {
         this.titular = titular;
     }
-
 
     public TipoCuenta getTipoCuenta() {
         return tipoCuenta;
@@ -44,21 +56,20 @@ public class Cuenta {
         return this;
     }
 
-
-    public LocalDateTime getFechaCreacion() {
+    public LocalDate getFechaCreacion() {
         return fechaCreacion;
     }
 
-    public Cuenta setFechaCreacion(LocalDateTime fechaCreacion) {
+    public Cuenta setFechaCreacion(LocalDate fechaCreacion) {
         this.fechaCreacion = fechaCreacion;
         return this;
     }
 
-    public int getBalance() {
+    public double getBalance() {
         return balance;
     }
 
-    public Cuenta setBalance(int balance) {
+    public Cuenta setBalance(double balance) {
         this.balance = balance;
         return this;
     }
@@ -85,6 +96,4 @@ public class Cuenta {
     public long getNumeroCuenta() {
         return numeroCuenta;
     }
-
-
 }

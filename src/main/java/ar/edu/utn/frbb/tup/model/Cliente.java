@@ -1,7 +1,9 @@
 package ar.edu.utn.frbb.tup.model;
 
 import ar.edu.utn.frbb.tup.controller.dto.ClienteDto;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
+import ar.edu.utn.frbb.tup.model.TipoCuenta;
+import ar.edu.utn.frbb.tup.model.TipoMoneda;
+import ar.edu.utn.frbb.tup.model.TipoPersona;
 
 import java.time.LocalDate;
 import java.util.HashSet;
@@ -12,18 +14,19 @@ public class Cliente extends Persona{
     private TipoPersona tipoPersona;
     private String banco;
     private LocalDate fechaAlta;
-    @JsonManagedReference
     private Set<Cuenta> cuentas = new HashSet<>();
+    private Set<Prestamo> prestamos = new HashSet<>();
 
     public Cliente() {
         super();
     }
     public Cliente(ClienteDto clienteDto) {
         super(clienteDto.getDni(), clienteDto.getApellido(), clienteDto.getNombre(), clienteDto.getFechaNacimiento());
-        this.tipoPersona = TipoPersona.fromString(clienteDto.getTipoPersona()); // Convertir el String a TipoPersona
+        tipoPersona = TipoPersona.fromString(clienteDto.getTipoPersona()); //convierto en string el tipo de personas
         fechaAlta = LocalDate.now();
         banco = clienteDto.getBanco();
     }
+
 
     public TipoPersona getTipoPersona() {
         return tipoPersona;
@@ -55,7 +58,7 @@ public class Cliente extends Persona{
 
     public void addCuenta(Cuenta cuenta) {
         this.cuentas.add(cuenta);
-        cuenta.setTitular(this);
+        cuenta.setTitular(cuenta.getTitular());
     }
 
     public boolean tieneCuenta(TipoCuenta tipoCuenta, TipoMoneda moneda) {
@@ -66,6 +69,25 @@ public class Cliente extends Persona{
             }
         }
         return false;
+    }
+
+    public boolean tieneCuentaMoneda(TipoMoneda moneda) {
+        for (Cuenta cuenta:
+                cuentas) {
+            if (moneda.equals(cuenta.getMoneda())) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public Set<Prestamo> getPrestamos() {
+        return prestamos;
+    }
+
+    public void addPrestamo(Prestamo prestamo) {
+        this.prestamos.add(prestamo);
+        prestamo.setNumeroCliente(prestamo.getNumeroCliente());
     }
 
     @Override

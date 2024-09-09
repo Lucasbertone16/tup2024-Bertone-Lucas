@@ -5,6 +5,8 @@ import ar.edu.utn.frbb.tup.model.*;
 import ar.edu.utn.frbb.tup.model.exception.CuentaAlreadyExistsException;
 import ar.edu.utn.frbb.tup.model.exception.TipoCuentaAlreadyExistsException;
 import ar.edu.utn.frbb.tup.model.exception.TipoDeCuentaNoSoportadaException;
+import ar.edu.utn.frbb.tup.model.exception.CuentaNoEncontradaException;
+import ar.edu.utn.frbb.tup.model.exception.NoSaldoException;
 import ar.edu.utn.frbb.tup.persistence.ClienteDao;
 import ar.edu.utn.frbb.tup.persistence.CuentaDao;
 import ar.edu.utn.frbb.tup.persistence.CuentaRepo;
@@ -62,32 +64,31 @@ public class CuentaService {
         return true;
     }
 
-    public boolean verificarCuenta(long numeroCliente, String moneda) {
-        return cuentaDao.verificarCuenta(numeroCliente, moneda);
-    }
 
-    public void actualizarCuentaCliente(Prestamo prestamo) {
-        long numeroCliente = prestamo.getNumeroCliente();
-        double monto = prestamo.getMontoPrestamo();
-
-        // Obtiene todas las cuentas del cliente
-        List<Cuenta> cuentas = getCuentasByCliente(numeroCliente);
-
-        // Encuentra la cuenta principal (o la primera cuenta) y actualiza su saldo
-        if (!cuentas.isEmpty()) {
-            Cuenta cuenta = cuentas.get(0); // Asumiendo que la primera cuenta es la principal
-            cuenta.setBalance(cuenta.getBalance() + monto);
-            cuentaDao.update(cuenta); // Actualiza la cuenta en la base de datos
-        } else {
-            throw new IllegalStateException("No se encontró una cuenta para el cliente " + numeroCliente);
-        }
-    }
-    public List<Cuenta> getCuentasByCliente(long dni) {
-        return cuentaDao.getCuentasByCliente(dni);
-    }
 
     public Optional<CuentaEntity> obtenerCuentaPorId(long cuentaId) {
         return cuentaRepo.findById(cuentaId);
+    }
+    public void actualizarCuenta(Prestamo prestamo) throws Exception {
+        Cuenta cuenta = findByMoneda(prestamo.getMoneda());
+        cuenta.setBalance(cuenta.getBalance() + prestamo.getMontoPedido());
+        cuentaDao.save(cuenta);
+    }
+
+    public Cuenta findByMoneda(TipoMoneda moneda) throws Exception {
+        if (cuentaDao.findByMoneda(moneda) == null) {
+            throw new CuentaNoEncontradaException("La cuenta no existe");
+        }
+        return cuentaDao.findByMoneda(moneda);
+    }
+
+    public void  pagarCuotaPrestamo(Prestamo prestamo) throws Exception {
+        Cuenta cuenta = findByMoneda(prestamo.getMoneda());
+        if (cuenta.getBalance() < prestamo.getValorCuota()) {
+            throw new NoSaldoException("No hay suficiente saldo en la cuenta");
+        }
+        cuenta.setBalance(cuenta.getBalance() - prestamo.getValorCuota());
+        cuentaDao.save(cuenta);
     }
 
 }

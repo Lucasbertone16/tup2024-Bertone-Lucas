@@ -1,6 +1,7 @@
 package ar.edu.utn.frbb.tup.persistence;
 
 import ar.edu.utn.frbb.tup.model.Cuenta;
+import ar.edu.utn.frbb.tup.model.TipoMoneda;
 import ar.edu.utn.frbb.tup.persistence.entity.CuentaEntity;
 import org.springframework.stereotype.Component;
 
@@ -52,5 +53,16 @@ public class CuentaDao extends AbstractBaseDao {
             }
         }
         return false;
+    }
+
+    public Cuenta findByMoneda(TipoMoneda moneda) {
+        for (Object object : getInMemoryDatabase().values()) {
+            CuentaEntity cuentaEntity = ((CuentaEntity) object);
+            TipoMoneda cuentaMoneda = TipoMoneda.valueOf(cuentaEntity.getMoneda());
+            if (cuentaMoneda.equals(moneda)) {
+                return cuentaEntity.toCuenta();
+            }
+        }
+        return null;
     }
 }

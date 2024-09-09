@@ -3,8 +3,10 @@ package ar.edu.utn.frbb.tup.service;
 import ar.edu.utn.frbb.tup.controller.dto.ClienteDto;
 import ar.edu.utn.frbb.tup.model.Cliente;
 import ar.edu.utn.frbb.tup.model.Cuenta;
+import ar.edu.utn.frbb.tup.model.Prestamo;
 import ar.edu.utn.frbb.tup.model.exception.ClienteAlreadyExistsException;
 import ar.edu.utn.frbb.tup.model.exception.TipoCuentaAlreadyExistsException;
+import ar.edu.utn.frbb.tup.model.exception.CuentaNoEncontradaException;
 import ar.edu.utn.frbb.tup.persistence.ClienteDao;
 import org.springframework.stereotype.Service;
 
@@ -48,5 +50,15 @@ public class ClienteService {
             throw new IllegalArgumentException("El cliente no existe");
         }
         return cliente;
+    }
+
+    public void agregarPrestamo (Prestamo prestamo, long dniTitular) throws Exception {
+        Cliente titular = buscarClientePorDni(dniTitular);
+        prestamo.setNumeroCliente(titular.getDni());
+        if (!titular.tieneCuentaMoneda(prestamo.getMoneda())) {
+            throw new CuentaNoEncontradaException("El cliente no posee una cuenta de esa moneda");
+        }
+        titular.addPrestamo(prestamo);
+        clienteDao.save(titular);
     }
 }

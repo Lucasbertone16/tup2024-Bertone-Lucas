@@ -7,14 +7,20 @@ import ar.edu.utn.frbb.tup.model.exception.TipoCuentaAlreadyExistsException;
 import ar.edu.utn.frbb.tup.model.exception.TipoDeCuentaNoSoportadaException;
 import ar.edu.utn.frbb.tup.persistence.ClienteDao;
 import ar.edu.utn.frbb.tup.persistence.CuentaDao;
+import ar.edu.utn.frbb.tup.persistence.CuentaRepo;
 import ar.edu.utn.frbb.tup.persistence.entity.CuentaEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+
 import java.util.List;
+import java.util.Optional;
 
 @Component
 public class CuentaService {
+
+    @Autowired
+    private CuentaRepo cuentaRepo;
 
     @Autowired
     private CuentaDao cuentaDao;
@@ -80,6 +86,8 @@ public class CuentaService {
         return cuentaDao.getCuentasByCliente(dni);
     }
 
-
+    public Optional<CuentaEntity> obtenerCuentaPorId(long cuentaId) {
+        return cuentaRepo.findById(cuentaId);
+    }
 
 }

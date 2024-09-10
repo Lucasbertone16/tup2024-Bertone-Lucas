@@ -20,6 +20,7 @@ public class Cliente extends Persona{
     public Cliente() {
         super();
     }
+
     public Cliente(ClienteDto clienteDto) {
         super(clienteDto.getDni(), clienteDto.getApellido(), clienteDto.getNombre(), clienteDto.getFechaNacimiento());
         tipoPersona = TipoPersona.fromString(clienteDto.getTipoPersona()); //convierto en string el tipo de personas

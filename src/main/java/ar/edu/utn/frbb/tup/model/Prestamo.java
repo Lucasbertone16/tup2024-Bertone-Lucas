@@ -1,7 +1,6 @@
 package ar.edu.utn.frbb.tup.model;
 
 import ar.edu.utn.frbb.tup.controller.dto.PrestamoDto;
-import ar.edu.utn.frbb.tup.model.TipoMoneda;
 
 public class Prestamo {
     private long id;

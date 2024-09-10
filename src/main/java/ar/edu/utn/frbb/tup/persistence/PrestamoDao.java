@@ -1,9 +1,7 @@
 package ar.edu.utn.frbb.tup.persistence;
-
 import ar.edu.utn.frbb.tup.model.Prestamo;
 import ar.edu.utn.frbb.tup.persistence.entity.PrestamoEntity;
 import org.springframework.stereotype.Component;
-
 import java.util.ArrayList;
 import java.util.List;
 

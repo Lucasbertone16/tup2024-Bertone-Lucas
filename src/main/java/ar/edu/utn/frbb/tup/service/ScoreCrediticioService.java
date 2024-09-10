@@ -5,13 +5,16 @@ import java.util.Random;
 
 @Service
 public class ScoreCrediticioService {
+
     private final Random random = new Random();
 
     public boolean verifyScore(long dni) {
-        // Genera un número aleatorio entre 0 y 1
-        double randomValue = random.nextDouble();
+        int randomInt = random.nextInt(100);
+        // Si el número es par, devolver true; si es impar, devolver false
+        return esPar(randomInt);
+    }
 
-        // Devuelve false aproximadamente 1/3 de las veces
-        return randomValue >= 0.05;
+    private boolean esPar(int numero) {
+        return numero % 2 == 0;
     }
 }

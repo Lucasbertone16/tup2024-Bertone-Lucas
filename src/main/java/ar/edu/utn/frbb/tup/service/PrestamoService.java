@@ -5,7 +5,6 @@ import ar.edu.utn.frbb.tup.model.Prestamo;
 import ar.edu.utn.frbb.tup.model.PrestamoResultado;
 import ar.edu.utn.frbb.tup.model.EstadoDelPrestamo;
 import ar.edu.utn.frbb.tup.model.exception.ClienteNoEncontradoException;
-import ar.edu.utn.frbb.tup.model.exception.PrestamoNoExisteException;
 import ar.edu.utn.frbb.tup.persistence.PrestamoDao;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -14,7 +13,6 @@ import java.util.List;
 
 @Service
 public class PrestamoService {
-
     @Autowired
     private ClienteService clienteService;
 
@@ -52,14 +50,4 @@ public class PrestamoService {
         return prestamoDao.getPrestamosByCliente(dni);
     }
 
-    public Prestamo pagarCuota(long id) throws  Exception{
-        Prestamo prestamo = prestamoDao.find(id);
-        if (prestamo == null) {
-            throw new PrestamoNoExisteException("El prestamo no existe");
-        }
-        cuentaService.pagarCuotaPrestamo(prestamo);
-        prestamo.pagarCuota();
-        prestamoDao.save(prestamo);
-        return prestamo;
-    }
 }

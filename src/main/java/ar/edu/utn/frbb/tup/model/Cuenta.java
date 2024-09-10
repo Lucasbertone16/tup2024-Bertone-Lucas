@@ -2,10 +2,7 @@ package ar.edu.utn.frbb.tup.model;
 
 import java.time.LocalDateTime;
 import java.util.Random;
-
 import ar.edu.utn.frbb.tup.controller.dto.CuentaDto;
-import ar.edu.utn.frbb.tup.model.TipoCuenta;
-import ar.edu.utn.frbb.tup.model.TipoMoneda;
 
 public class Cuenta {
     private long numeroCuenta;
@@ -16,7 +13,7 @@ public class Cuenta {
     private TipoMoneda moneda;
 
     public Cuenta() {
-        this.numeroCuenta = new Random().nextLong();
+        this.numeroCuenta = Math.abs(new Random().nextLong()); //Valor absoluto para que siempre quede positivo
         this.balance = 0;
         this.fechaCreacion = LocalDateTime.now();
     }

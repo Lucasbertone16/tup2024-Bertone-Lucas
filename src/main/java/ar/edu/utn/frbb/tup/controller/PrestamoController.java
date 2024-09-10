@@ -31,8 +31,5 @@ public class PrestamoController {
         return prestamoService.getPrestamosByCliente(dni);
     }
 
-    @PostMapping("/{id}")
-    public Prestamo pagarCuota(@PathVariable long id) throws Exception {
-        return prestamoService.pagarCuota(id);
-    }
+
 }

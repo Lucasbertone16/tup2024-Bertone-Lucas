@@ -50,7 +50,7 @@ public class PrestamoService {
         return prestamoResultado;
     }
 
-    public List<Prestamo> getPrestamosByCliente(long dni) throws Exception, ClienteNoEncontradoException {
+    public List<Prestamo> obtenerPrestamoPorId(long dni) throws Exception, ClienteNoEncontradoException {
         clienteService.buscarClientePorDni(dni);
         return prestamoDao.getPrestamosByCliente(dni);
     }

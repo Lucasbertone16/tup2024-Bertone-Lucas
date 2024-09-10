@@ -7,6 +7,8 @@ import ar.edu.utn.frbb.tup.model.TipoCuenta;
 import ar.edu.utn.frbb.tup.model.TipoMoneda;
 import ar.edu.utn.frbb.tup.model.TipoPersona;
 import ar.edu.utn.frbb.tup.model.exception.ClienteAlreadyExistsException;
+import ar.edu.utn.frbb.tup.model.exception.ClienteNoEncontradoException;
+import ar.edu.utn.frbb.tup.model.exception.EsMenorException;
 import ar.edu.utn.frbb.tup.model.exception.TipoCuentaAlreadyExistsException;
 import ar.edu.utn.frbb.tup.persistence.ClienteDao;
 import org.junit.jupiter.api.BeforeAll;
@@ -56,7 +58,7 @@ public class ClienteServiceTest {
     }
 
     @Test
-    public void testClienteSuccess() throws ClienteAlreadyExistsException {
+    public void testClienteSuccess() throws ClienteAlreadyExistsException, EsMenorException, Exception {
         ClienteDto clienteDto = new ClienteDto();
         clienteDto.setFechaNacimiento("1978-03-25");
         clienteDto.setDni(29857643);
@@ -83,7 +85,7 @@ public class ClienteServiceTest {
 
 
     @Test
-    public void testAgregarCuentaAClienteSuccess() throws TipoCuentaAlreadyExistsException {
+    public void testAgregarCuentaAClienteSuccess() throws TipoCuentaAlreadyExistsException, ClienteNoEncontradoException, Exception {
         Cliente pepeRino = new Cliente();
         pepeRino.setDni(26456439);
         pepeRino.setNombre("Pepe");
@@ -109,7 +111,7 @@ public class ClienteServiceTest {
 
 
     @Test
-    public void testAgregarCuentaAClienteDuplicada() throws TipoCuentaAlreadyExistsException {
+    public void testAgregarCuentaAClienteDuplicada() throws TipoCuentaAlreadyExistsException, ClienteNoEncontradoException, Exception {
         Cliente luciano = new Cliente();
         luciano.setDni(26456439);
         luciano.setNombre("Pepe");
@@ -144,7 +146,7 @@ public class ClienteServiceTest {
 
 
     @Test
-    public void testAgregarDosCuentasCajaAhorroYCuentaCorrienteEnPesos() throws TipoCuentaAlreadyExistsException {
+    public void testAgregarDosCuentasCajaAhorroYCuentaCorrienteEnPesos() throws TipoCuentaAlreadyExistsException, ClienteNoEncontradoException, Exception {
         Cliente peperino = new Cliente();
         peperino.setDni(26456439);
         peperino.setNombre("Pepe");
@@ -177,7 +179,7 @@ public class ClienteServiceTest {
 
 
     @Test
-    public void testAgregarDosCuentasCajaAhorroEnPesosYDolares() throws TipoCuentaAlreadyExistsException {
+    public void testAgregarDosCuentasCajaAhorroEnPesosYDolares() throws TipoCuentaAlreadyExistsException, ClienteNoEncontradoException, Exception {
         Cliente peperino = new Cliente();
         peperino.setDni(26456439);
         peperino.setNombre("Pepe");
@@ -211,7 +213,7 @@ public class ClienteServiceTest {
     }
 
     @Test
-    public void testBuscarPorDniExito() throws ClienteAlreadyExistsException{
+    public void testBuscarPorDniExito() throws ClienteAlreadyExistsException, ClienteNoEncontradoException, Exception {
         Cliente peperino = new Cliente();
         peperino.setDni(26456439);
         peperino.setNombre("Pepe");

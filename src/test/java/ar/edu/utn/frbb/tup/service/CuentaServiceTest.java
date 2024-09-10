@@ -2,10 +2,7 @@ package ar.edu.utn.frbb.tup.service;
 
 import ar.edu.utn.frbb.tup.controller.dto.CuentaDto;
 import ar.edu.utn.frbb.tup.model.*;
-import ar.edu.utn.frbb.tup.model.exception.ClienteAlreadyExistsException;
-import ar.edu.utn.frbb.tup.model.exception.CuentaAlreadyExistsException;
-import ar.edu.utn.frbb.tup.model.exception.TipoCuentaAlreadyExistsException;
-import ar.edu.utn.frbb.tup.model.exception.TipoDeCuentaNoSoportadaException;
+import ar.edu.utn.frbb.tup.model.exception.*;
 import ar.edu.utn.frbb.tup.persistence.ClienteDao;
 import ar.edu.utn.frbb.tup.persistence.CuentaDao;
 import org.junit.jupiter.api.BeforeAll;
@@ -72,7 +69,7 @@ public class CuentaServiceTest {
     }
 
     @Test
-    public void testClienteYaTieneCuentaDeEseTipo() throws CuentaAlreadyExistsException, TipoCuentaAlreadyExistsException, TipoDeCuentaNoSoportadaException {
+    public void testClienteYaTieneCuentaDeEseTipo() throws CuentaAlreadyExistsException, TipoCuentaAlreadyExistsException, TipoDeCuentaNoSoportadaException, ClienteNoEncontradoException, Exception {
         Cliente peperino = new Cliente();
         peperino.setDni(123456789);
         peperino.setNombre("Pepe");
@@ -97,7 +94,7 @@ public class CuentaServiceTest {
     }
 
     @Test
-    public void testDarDeAltaCuentaTipoNuevo() throws CuentaAlreadyExistsException, TipoCuentaAlreadyExistsException, TipoDeCuentaNoSoportadaException, ClienteAlreadyExistsException {
+    public void testDarDeAltaCuentaTipoNuevo() throws CuentaAlreadyExistsException, TipoCuentaAlreadyExistsException, TipoDeCuentaNoSoportadaException, ClienteAlreadyExistsException, ClienteNoEncontradoException, Exception {
         Cliente peperino = new Cliente();
         peperino.setDni(123456789);
         peperino.setNombre("Pepe");

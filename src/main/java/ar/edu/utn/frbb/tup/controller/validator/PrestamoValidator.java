@@ -13,13 +13,20 @@ public class PrestamoValidator {
         if ((!"P".equals(prestamoDto.getMoneda()) && !"D".equals(prestamoDto.getMoneda()))) {
             throw new MonedaNoSoportadaException("El tipo de moneda no es correcto o es nulo");
         }
-        //Check de monto mayor a 0
-        if (prestamoDto.getMontoPrestamo() <= 0) {
+
+        //Monto minimo de prestamo 1000 para que sea mas realista
+        if (prestamoDto.getMontoPrestamo() <= 1000) {
             throw new IllegalArgumentException("El monto del préstamo debe ser mayor a 0.");
         }
+
         //Check de plazo de meses
         if (prestamoDto.getPlazoMeses() < 3 || prestamoDto.getPlazoMeses() > 120) {
             throw new IllegalArgumentException("El plazo debe estar entre 3 y 120 meses.");
+        }
+
+        // Validar que el número de dni del cliente no sea null o 0
+        if (prestamoDto.getNumeroCliente() <= 0) {
+            throw new IllegalArgumentException("El número de cliente no es válido.");
         }
     }
 }

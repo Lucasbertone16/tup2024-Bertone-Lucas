@@ -8,11 +8,10 @@ import ar.edu.utn.frbb.tup.model.exception.ClienteNoEncontradoException;
 import ar.edu.utn.frbb.tup.service.PrestamoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/prestamo")
+@RequestMapping("/prestamo")
 public class PrestamoController {
 
     @Autowired

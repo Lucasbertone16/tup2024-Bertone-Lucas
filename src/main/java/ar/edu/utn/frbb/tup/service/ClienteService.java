@@ -35,7 +35,7 @@ public class ClienteService {
         return cliente;
     }
 
-    public void agregarCuenta(Cuenta cuenta, long dniTitular) throws Exception, ClienteNoEncontradoException {
+    public void agregarCuenta(Cuenta cuenta, long dniTitular) throws Exception, ClienteNoEncontradoException, TipoCuentaAlreadyExistsException {
         Cliente titular = buscarClientePorDni(dniTitular);
         cuenta.setTitular(titular.getDni());
         if (titular.tieneCuenta(cuenta.getTipoCuenta(), cuenta.getMoneda())) {
@@ -48,7 +48,7 @@ public class ClienteService {
         clienteDao.save(titular);
     }
 
-    public void agregarPrestamo (Prestamo prestamo, long dniTitular) throws Exception, ClienteNoEncontradoException {
+    public void agregarPrestamo (Prestamo prestamo, long dniTitular) throws Exception, ClienteNoEncontradoException, CuentaNoEncontradaException {
         Cliente titular = buscarClientePorDni(dniTitular);
         prestamo.setNumeroCliente(titular.getDni());
         if (!titular.tieneCuentaMoneda(prestamo.getMoneda())) {

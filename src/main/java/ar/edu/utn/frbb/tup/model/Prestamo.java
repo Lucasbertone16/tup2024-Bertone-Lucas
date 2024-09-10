@@ -13,9 +13,10 @@ public class Prestamo {
     private int cuotasPagas;
     private TipoMoneda moneda;
 
-
+    //Constructor vacio
     public Prestamo() {}
 
+    //Constructor comun con interes calculado
     public Prestamo(long numeroCliente, int plazoMeses, long montoPedido, TipoMoneda moneda) {
         this.numeroCliente = numeroCliente;
         this.plazoMeses = plazoMeses;
@@ -26,7 +27,7 @@ public class Prestamo {
         this.saldoRestante = this.montoConIntereses;
         this.moneda = moneda;
     }
-
+    //Constructor del Dto con interes calculado
     public Prestamo(PrestamoDto prestamoDto) {
         this(prestamoDto.getNumeroCliente(), prestamoDto.getPlazoMeses(), prestamoDto.getMontoPrestamo(), TipoMoneda.fromString(prestamoDto.getMoneda()));
         this.montoConIntereses = (long) (prestamoDto.getMontoPrestamo() * 1.05);
@@ -103,8 +104,4 @@ public class Prestamo {
         this.cuotasPagas = cuotasPagas;
     }
 
-    public void pagarCuota() {
-        this.saldoRestante = this.saldoRestante - this.valorCuota;
-        this.cuotasPagas++;
-    }
 }

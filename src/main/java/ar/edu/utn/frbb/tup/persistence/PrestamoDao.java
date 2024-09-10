@@ -6,10 +6,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Component
-public class PrestamoDao extends AbstractBaseDao{
+public class PrestamoDao extends AbstractBaseDao {
 
     private long nextId = 1;
 
+    //Guarda prestamo
     public void save(Prestamo prestamo) {
         if (prestamo.getId() == 0) {
             prestamo.setId(nextId++);
@@ -18,6 +19,7 @@ public class PrestamoDao extends AbstractBaseDao{
         getInMemoryDatabase().put(entity.getId(), entity);
     }
 
+
     public Prestamo find(long id) {
         if (getInMemoryDatabase().get(id) == null) {
             return null;
@@ -25,6 +27,7 @@ public class PrestamoDao extends AbstractBaseDao{
         return ((PrestamoEntity) getInMemoryDatabase().get(id)).toPrestamo();
     }
 
+    //Get de todos los prestamos que tiene el cliente activos
     public List<Prestamo> getPrestamosByCliente(long dni) {
         List<Prestamo> prestamosDelCliente = new ArrayList<>();
         for (Object object :

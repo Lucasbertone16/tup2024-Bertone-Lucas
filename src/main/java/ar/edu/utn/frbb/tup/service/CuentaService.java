@@ -17,7 +17,7 @@ public class CuentaService {
     @Autowired
     private ClienteService clienteService;
 
-    public Cuenta darDeAltaCuenta(CuentaDto cuentaDto) throws CuentaAlreadyExistsException, TipoDeCuentaNoSoportadaException, Exception, ClienteNoEncontradoException {
+    public Cuenta darDeAltaCuenta(CuentaDto cuentaDto) throws CuentaAlreadyExistsException, TipoDeCuentaNoSoportadaException, Exception, ClienteNoEncontradoException, TipoCuentaAlreadyExistsException {
         Cuenta cuenta = new Cuenta(cuentaDto);
 
         if(cuentaDao.find(cuenta.getNumeroCuenta()) != null) {
@@ -53,13 +53,13 @@ public class CuentaService {
 
 
 
-    public void actualizarCuenta(Prestamo prestamo) throws Exception {
+    public void actualizarCuenta(Prestamo prestamo) throws Exception, CuentaNoEncontradaException {
         Cuenta cuenta = findByMoneda(prestamo.getMoneda());
         cuenta.setBalance(cuenta.getBalance() + prestamo.getMontoPedido());
         cuentaDao.save(cuenta);
     }
 
-    public Cuenta findByMoneda(TipoMoneda moneda) throws Exception {
+    public Cuenta findByMoneda(TipoMoneda moneda) throws Exception, CuentaNoEncontradaException {
         if (cuentaDao.findByMoneda(moneda) == null) {
             throw new CuentaNoEncontradaException("La cuenta no existe");
         }

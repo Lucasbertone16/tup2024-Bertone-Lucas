@@ -6,8 +6,8 @@ public class Cuota {
 
     //Constructor que inicializa el num de cuotas y el monto con interes
     public Cuota(int cuotaNro, double cuotaMonto) {
-        // Se asigna el valor del parámetro cuotaNro en lugar de forzarlo a 1
-        this.cuotaNro = cuotaNro;
+        //Asigna valor 1 como inicial
+        this.cuotaNro = 1;
         // Se distribuye el monto entre las cuotas y se aplica un 5% de interés
         this.cuotaMonto = (cuotaMonto / cuotaNro) * 1.05;
     }

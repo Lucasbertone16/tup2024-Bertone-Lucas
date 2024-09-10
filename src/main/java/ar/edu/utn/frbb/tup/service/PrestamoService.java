@@ -4,6 +4,7 @@ import ar.edu.utn.frbb.tup.controller.dto.PrestamoDto;
 import ar.edu.utn.frbb.tup.model.Prestamo;
 import ar.edu.utn.frbb.tup.model.PrestamoResultado;
 import ar.edu.utn.frbb.tup.model.EstadoDelPrestamo;
+import ar.edu.utn.frbb.tup.model.exception.ClienteNoEncontradoException;
 import ar.edu.utn.frbb.tup.model.exception.PrestamoNoExisteException;
 import ar.edu.utn.frbb.tup.persistence.PrestamoDao;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,7 +28,7 @@ public class PrestamoService {
     private ScoreCrediticioService scoreCreditService;
 
 
-    public PrestamoResultado solicitarPrestamo (PrestamoDto prestamoDto) throws  Exception {
+    public PrestamoResultado solicitarPrestamo (PrestamoDto prestamoDto) throws Exception, ClienteNoEncontradoException {
         Prestamo prestamo = new Prestamo(prestamoDto);
         if (!scoreCreditService.verifyScore(prestamo.getNumeroCliente())) {
             PrestamoResultado prestamoResultado = new PrestamoResultado();
@@ -46,7 +47,7 @@ public class PrestamoService {
         return prestamoResultado;
     }
 
-    public List<Prestamo> getPrestamosByCliente(long dni) throws  Exception{
+    public List<Prestamo> getPrestamosByCliente(long dni) throws Exception, ClienteNoEncontradoException {
         clienteService.buscarClientePorDni(dni);
         return prestamoDao.getPrestamosByCliente(dni);
     }

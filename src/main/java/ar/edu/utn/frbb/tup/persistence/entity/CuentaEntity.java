@@ -1,30 +1,27 @@
 package ar.edu.utn.frbb.tup.persistence.entity;
 
-import ar.edu.utn.frbb.tup.model.Cliente;
 import ar.edu.utn.frbb.tup.model.Cuenta;
 import ar.edu.utn.frbb.tup.model.TipoCuenta;
 import ar.edu.utn.frbb.tup.model.TipoMoneda;
-import ar.edu.utn.frbb.tup.persistence.ClienteDao;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
-public class CuentaEntity extends BaseEntity {
-    String nombre;
-    LocalDate fechaCreacion;
-    double balance;
-    String tipoCuenta;
-    String moneda;
-    Cliente titular; // Mantener titular como objeto Cliente
-    long numeroCuenta;
+public class CuentaEntity extends BaseEntity{
+    private final LocalDateTime fechaCreacion;
+    private final long balance;
+    private final String tipoCuenta;
+    private final Long titular;
+    private final long numeroCuenta;
+    private String moneda;
 
     public CuentaEntity(Cuenta cuenta) {
         super(cuenta.getNumeroCuenta());
+        this.numeroCuenta = cuenta.getNumeroCuenta();
         this.balance = cuenta.getBalance();
         this.tipoCuenta = cuenta.getTipoCuenta().toString();
-        this.moneda = cuenta.getMoneda().toString();
-        this.titular = cuenta.getTitular(); // Asignar Cliente directamente
+        this.titular = cuenta.getTitular();
         this.fechaCreacion = cuenta.getFechaCreacion();
-        this.numeroCuenta = cuenta.getNumeroCuenta();
+        this.moneda = cuenta.getMoneda().toString();
     }
 
     public Cuenta toCuenta() {
@@ -32,58 +29,14 @@ public class CuentaEntity extends BaseEntity {
         cuenta.setBalance(this.balance);
         cuenta.setNumeroCuenta(this.numeroCuenta);
         cuenta.setTipoCuenta(TipoCuenta.valueOf(this.tipoCuenta));
-        cuenta.setMoneda(TipoMoneda.valueOf(this.moneda));
         cuenta.setFechaCreacion(this.fechaCreacion);
-        cuenta.setTitular(this.titular); // No es necesario verificar null
+        cuenta.setTitular(this.titular);
+        cuenta.setMoneda(TipoMoneda.valueOf(this.moneda));
         return cuenta;
     }
 
-    public String getNombre() {
-        return nombre;
-    }
-
-    public void setNombre(String nombre) {
-        this.nombre = nombre;
-    }
-
-    public LocalDate getFechaCreacion() {
-        return fechaCreacion;
-    }
-
-    public void setFechaCreacion(LocalDate fechaCreacion) {
-        this.fechaCreacion = fechaCreacion;
-    }
-
-    public double getBalance() {
-        return balance;
-    }
-
-    public void setBalance(double balance) {
-        this.balance = balance;
-    }
-
-    public String getTipoCuenta() {
-        return tipoCuenta;
-    }
-
-    public void setTipoCuenta(String tipoCuenta) {
-        this.tipoCuenta = tipoCuenta;
-    }
-
-    public Cliente getTitular() {
+    public Long getTitular() {
         return titular;
-    }
-
-    public void setTitular(Cliente titular) {
-        this.titular = titular;
-    }
-
-    public long getNumeroCuenta() {
-        return numeroCuenta;
-    }
-
-    public void setNumeroCuenta(long numeroCuenta) {
-        this.numeroCuenta = numeroCuenta;
     }
 
     public String getMoneda() {

@@ -1,41 +1,31 @@
 package ar.edu.utn.frbb.tup.model;
 
-import ar.edu.utn.frbb.tup.controller.dto.CuentaDto;
-import com.fasterxml.jackson.annotation.JsonBackReference;
-
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Random;
+
+import ar.edu.utn.frbb.tup.controller.dto.CuentaDto;
+import ar.edu.utn.frbb.tup.model.TipoCuenta;
+import ar.edu.utn.frbb.tup.model.TipoMoneda;
 
 public class Cuenta {
     private long numeroCuenta;
-    LocalDate fechaCreacion;
-    double balance;
-    TipoCuenta tipoCuenta;
-    Cliente titular;
-    TipoMoneda moneda;
+    private LocalDateTime fechaCreacion;
+    private long balance;
+    private TipoCuenta tipoCuenta;
+    private long dniTitular;
+    private TipoMoneda moneda;
 
     public Cuenta() {
-        this.numeroCuenta = Math.abs(new Random().nextLong()); // Asegúrate de que el número sea único
+        this.numeroCuenta = new Random().nextLong();
         this.balance = 0;
-        this.fechaCreacion = LocalDate.now();
+        this.fechaCreacion = LocalDateTime.now();
     }
 
-    public Cuenta(CuentaDto cuentaDto) {
+    public Cuenta(CuentaDto cuentaDto){
+        this();
         this.tipoCuenta = TipoCuenta.fromString(cuentaDto.getTipoCuenta());
         this.moneda = TipoMoneda.fromString(cuentaDto.getMoneda());
-        this.fechaCreacion = LocalDate.now();
-        this.balance = 0;
-        this.numeroCuenta = Math.abs(new Random().nextLong()); // Asegúrate de que el número sea único
-    }
-
-
-
-    public Cliente getTitular() {
-        return titular;
-    }
-
-    public void setTitular(Cliente titular) {
-        this.titular = titular;
+        this.dniTitular = cuentaDto.getDniTitular();
     }
 
     public TipoCuenta getTipoCuenta() {
@@ -56,44 +46,40 @@ public class Cuenta {
         return this;
     }
 
-    public LocalDate getFechaCreacion() {
+    public LocalDateTime getFechaCreacion() {
         return fechaCreacion;
     }
 
-    public Cuenta setFechaCreacion(LocalDate fechaCreacion) {
+    public Cuenta setFechaCreacion(LocalDateTime fechaCreacion) {
         this.fechaCreacion = fechaCreacion;
         return this;
     }
 
-    public double getBalance() {
+    public long getBalance() {
         return balance;
     }
 
-    public Cuenta setBalance(double balance) {
+    public Cuenta setBalance(long balance) {
         this.balance = balance;
         return this;
     }
 
-    public void debitarDeCuenta(int cantidadADebitar) throws NoAlcanzaException, CantidadNegativaException {
-        if (cantidadADebitar < 0) {
-            throw new CantidadNegativaException();
-        }
+    public long getTitular() {
+        return dniTitular;
+    }
 
-        if (balance < cantidadADebitar) {
-            throw new NoAlcanzaException();
-        }
-        this.balance = this.balance - cantidadADebitar;
+    public Cuenta setTitular(long dniTitular) {
+        this.dniTitular = dniTitular;
+        return this;
     }
 
     public void setNumeroCuenta(long numeroCuenta) {
         this.numeroCuenta = numeroCuenta;
     }
 
-    public void forzaDebitoDeCuenta(int i) {
-        this.balance = this.balance - i;
-    }
-
     public long getNumeroCuenta() {
         return numeroCuenta;
     }
+
+
 }

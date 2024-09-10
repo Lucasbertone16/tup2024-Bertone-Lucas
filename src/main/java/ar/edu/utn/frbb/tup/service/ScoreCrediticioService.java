@@ -12,6 +12,6 @@ public class ScoreCrediticioService {
         double randomValue = random.nextDouble();
 
         // Devuelve false aproximadamente 1/3 de las veces
-        return randomValue >= 1.0 / 3.0;
+        return randomValue >= 0.05;
     }
 }

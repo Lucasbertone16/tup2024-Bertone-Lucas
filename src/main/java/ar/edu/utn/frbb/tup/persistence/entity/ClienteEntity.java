@@ -2,9 +2,8 @@ package ar.edu.utn.frbb.tup.persistence.entity;
 
 import ar.edu.utn.frbb.tup.model.Cliente;
 import ar.edu.utn.frbb.tup.model.Cuenta;
+import ar.edu.utn.frbb.tup.model.Prestamo;
 import ar.edu.utn.frbb.tup.model.TipoPersona;
-import ar.edu.utn.frbb.tup.persistence.CuentaDao;
-import ar.edu.utn.frbb.tup.persistence.entity.BaseEntity;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -14,11 +13,13 @@ public class ClienteEntity extends BaseEntity {
 
     private final String tipoPersona;
     private final String nombre;
-    private final String banco;
     private final String apellido;
+    private final String banco;
     private final LocalDate fechaAlta;
     private final LocalDate fechaNacimiento;
     private List<Long> cuentas;
+    private List<Long> prestamos;
+
 
     public ClienteEntity(Cliente cliente) {
         super(cliente.getDni());
@@ -29,13 +30,18 @@ public class ClienteEntity extends BaseEntity {
         this.fechaNacimiento = cliente.getFechaNacimiento();
         this.banco = cliente.getBanco();
         this.cuentas = new ArrayList<>();
+        this.prestamos = new ArrayList<>();
         if (cliente.getCuentas() != null && !cliente.getCuentas().isEmpty()) {
             for (Cuenta c: cliente.getCuentas()) {
                 cuentas.add(c.getNumeroCuenta());
             }
         }
+        if (cliente.getPrestamos() != null && !cliente.getPrestamos().isEmpty()) {
+            for (Prestamo p: cliente.getPrestamos()) {
+                prestamos.add(p.getNumeroCliente());
+            }
+        }
     }
-
 
     public Cliente toCliente() {
         Cliente cliente = new Cliente();
@@ -45,6 +51,7 @@ public class ClienteEntity extends BaseEntity {
         cliente.setTipoPersona(TipoPersona.fromString(this.tipoPersona));
         cliente.setFechaAlta(this.fechaAlta);
         cliente.setFechaNacimiento(this.fechaNacimiento);
+        cliente.setBanco(this.banco);
 
         return cliente;
     }

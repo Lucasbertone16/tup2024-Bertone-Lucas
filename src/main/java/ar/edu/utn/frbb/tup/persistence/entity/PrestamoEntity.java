@@ -8,7 +8,7 @@ public class PrestamoEntity extends BaseEntity {
     private final long montoPedido;
     private String moneda;
     private final long montoConIntereses;
-    private final long saldoRestante; //saldo deudor a pagar
+    private final long saldoRestante;
     private final long valorCuota;
     private final int cuotasPagas;
 

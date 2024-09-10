@@ -9,6 +9,7 @@ public class PrestamoDto {
     public PrestamoDto() {
     }
 
+    //Constructor del Dto
     public PrestamoDto(long numeroCliente, int plazoMeses, long montoPrestamo, String moneda) {
         this.numeroCliente = numeroCliente;
         this.plazoMeses = plazoMeses;

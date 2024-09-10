@@ -12,6 +12,7 @@ public class PrestamoValidator {
 
     // Método que valida los datos del préstamo antes de proceder
     public void validate(PrestamoDto prestamoDto) throws MonedaNoSoportadaException, NumeroClienteNullPrestamoException, PLazoMesesMaxMixPrestamo, MontoMinimoPrestamoException {
+
         // Validar que la moneda sea "P" o "D"
         if ((!"P".equals(prestamoDto.getMoneda()) && !"D".equals(prestamoDto.getMoneda()))) {
             throw new MonedaNoSoportadaException("El tipo de moneda no es correcto o es nulo");

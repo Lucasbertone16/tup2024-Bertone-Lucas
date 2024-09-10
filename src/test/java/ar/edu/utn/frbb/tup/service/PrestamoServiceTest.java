@@ -48,7 +48,7 @@ class PrestamoServiceTest {
         prestamoDto.setMoneda("P");
 
         when(scoreCreditService.verifyScore(4633967L)).thenReturn(true);
-        doNothing().when(clienteService).agregarPrestamo(any(Prestamo.class), anyLong());
+        doNothing().when(clienteService).agregarPrestamoCliente(any(Prestamo.class), anyLong());
         doNothing().when(cuentaService).actualizarCuenta(any(Prestamo.class));
 
         PrestamoResultado result = prestamoService.solicitarPrestamo(prestamoDto);
@@ -90,7 +90,7 @@ class PrestamoServiceTest {
         when(clienteService.buscarClientePorDni(dni)).thenReturn(null); // Simulamos que el cliente existe
         when(prestamoDao.getPrestamosByCliente(dni)).thenReturn(prestamos);
 
-        List<Prestamo> result = prestamoService.obtenerPrestamoPorId(dni);
+        List<Prestamo> result = prestamoService.obtenerPrestamoPorDni(dni);
 
         assertNotNull(result);
         assertEquals(2, result.size());
@@ -104,7 +104,7 @@ class PrestamoServiceTest {
 
         when(clienteService.buscarClientePorDni(dni)).thenThrow(new ClienteNoEncontradoException("El cliente no existe"));
 
-        assertThrows(ClienteNoEncontradoException.class, () -> prestamoService.obtenerPrestamoPorId(dni));
+        assertThrows(ClienteNoEncontradoException.class, () -> prestamoService.obtenerPrestamoPorDni(dni));
     }
 
 
@@ -117,7 +117,7 @@ class PrestamoServiceTest {
         prestamoDto.setMoneda("P");
 
         when(scoreCreditService.verifyScore(4633967L)).thenReturn(true);
-        doNothing().when(clienteService).agregarPrestamo(any(Prestamo.class), anyLong());
+        doNothing().when(clienteService).agregarPrestamoCliente(any(Prestamo.class), anyLong());
         doThrow(new RuntimeException("Error al actualizar la cuenta")).when(cuentaService).actualizarCuenta(any(Prestamo.class));
 
         Exception exception = assertThrows(RuntimeException.class, () -> prestamoService.solicitarPrestamo(prestamoDto));
@@ -167,5 +167,4 @@ class PrestamoServiceTest {
 
         verify(prestamoDao, never()).save(any(Prestamo.class));
     }
-
 }

@@ -50,7 +50,7 @@ public class PrestamoService {
         }
 
         //guardamos el prestamo
-        clienteService.agregarPrestamo(prestamo, prestamo.getNumeroCliente());
+        clienteService.agregarPrestamoCliente(prestamo, prestamo.getNumeroCliente());
         cuentaService.actualizarCuenta(prestamo);
         prestamoDao.save(prestamo);
 
@@ -62,7 +62,8 @@ public class PrestamoService {
         return prestamoResultado;
     }
 
-    public List<Prestamo> obtenerPrestamoPorId(long dni) throws Exception, ClienteNoEncontradoException {
+    //Buscamos los prestamos que tiene la persona por dni
+    public List<Prestamo> obtenerPrestamoPorDni(long dni) throws Exception, ClienteNoEncontradoException {
         clienteService.buscarClientePorDni(dni);
         return prestamoDao.getPrestamosByCliente(dni);
     }

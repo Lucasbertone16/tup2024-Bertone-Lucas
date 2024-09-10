@@ -25,7 +25,7 @@ public class PrestamoController {
     @GetMapping("/{dni}")
     public List<Prestamo> buscarPrestamoPorDni(@PathVariable long dni) {
         try {
-            return prestamoService.obtenerPrestamoPorId(dni);
+            return prestamoService.obtenerPrestamoPorDni(dni);
         } catch (ClienteNoEncontradoException e) {
             // Maneja el caso de cliente no encontrado devolviendo 404
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage(), e);

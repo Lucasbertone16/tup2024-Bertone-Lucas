@@ -48,7 +48,8 @@ public class ClienteService {
         clienteDao.save(titular);
     }
 
-    public void agregarPrestamo (Prestamo prestamo, long dniTitular) throws Exception, ClienteNoEncontradoException, CuentaNoEncontradaException {
+    //Agregamos los prestamos al cliente con este metodo
+    public void agregarPrestamoCliente(Prestamo prestamo, long dniTitular) throws Exception, ClienteNoEncontradoException, CuentaNoEncontradaException {
         Cliente titular = buscarClientePorDni(dniTitular);
         prestamo.setNumeroCliente(titular.getDni());
         if (!titular.tieneCuentaMoneda(prestamo.getMoneda())) {

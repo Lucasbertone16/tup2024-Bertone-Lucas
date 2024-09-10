@@ -38,8 +38,6 @@ public class CuentaService {
     }
 
 
-
-
     public Cuenta find(long id) {
         return cuentaDao.find(id);
     }

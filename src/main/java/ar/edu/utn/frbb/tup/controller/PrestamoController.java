@@ -4,9 +4,7 @@ import ar.edu.utn.frbb.tup.controller.dto.PrestamoDto;
 import ar.edu.utn.frbb.tup.model.Prestamo;
 import ar.edu.utn.frbb.tup.controller.validator.PrestamoValidator;
 import ar.edu.utn.frbb.tup.model.PrestamoResultado;
-import ar.edu.utn.frbb.tup.model.exception.ClienteNoEncontradoException;
-import ar.edu.utn.frbb.tup.model.exception.CuentaNoEncontradaException;
-import ar.edu.utn.frbb.tup.model.exception.MonedaNoSoportadaException;
+import ar.edu.utn.frbb.tup.model.exception.*;
 import ar.edu.utn.frbb.tup.service.PrestamoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -52,6 +50,15 @@ public class PrestamoController {
         } catch (CuentaNoEncontradaException e) {
             // Cuenta no encontrada - devolver 404
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage(), e);
+        } catch (PLazoMesesMaxMixPrestamo e) {
+            // Plazo de meses fuera del rango permitido - devolver 400
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage(), e);
+        } catch (MontoMinimoPrestamoException e) {
+            // Monto mínimo del préstamo no cumplido - devolver 400
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage(), e);
+        } catch (NumeroClienteNullPrestamoException e) {
+            // Número de cliente inválido o nulo - devolver 400
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage(), e);
         } catch (Exception e) {
             // Manejo genérico de errores devolviendo 500
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Error inesperado", e);

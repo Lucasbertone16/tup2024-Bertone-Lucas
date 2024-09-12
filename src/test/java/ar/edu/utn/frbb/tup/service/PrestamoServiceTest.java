@@ -48,16 +48,26 @@ class PrestamoServiceTest {
         prestamoDto.setPlazoMeses(6);
         prestamoDto.setMoneda("P");
 
-        when(scoreCreditService.verifyScore(4633967L)).thenReturn(true);
-        doNothing().when(clienteService).agregarPrestamoCliente(any(Prestamo.class), anyLong());
-        doNothing().when(cuentaService).actualizarCuenta(any(Prestamo.class));
+        // Configurar el comportamiento del servicio de verificación de score crediticio
+        when(scoreCreditService.verifyScore(4633967L)).thenReturn(true); // Simular que el score crediticio es positivo
 
+        // Configurar el comportamiento del servicio de cliente para agregar un préstamo
+        doNothing().when(clienteService).agregarPrestamoCliente(any(Prestamo.class), anyLong()); // Simular que el préstamo se agrega sin errores
+
+        // Configurar el comportamiento del servicio de cuenta para actualizar la cuenta
+        doNothing().when(cuentaService).actualizarCuenta(any(Prestamo.class)); // Simular que la cuenta se actualiza sin errores
+
+        // Llamar al método solicitarPrestamo del servicio de préstamos con el dto creado
         PrestamoResultado result = prestamoService.solicitarPrestamo(prestamoDto);
 
+        // Verificar que el resultado no es nulo
         assertNotNull(result);
+        // Verificar que el estado del préstamo es "APROBADO"
         assertEquals(EstadoDelPrestamo.APROBADO, result.getEstado());
+        // Verificar que el mensaje de resultado es el esperado
         assertEquals("Monto acreditado a su cuenta!", result.getMensaje());
 
+        // Verificar que el método save del DAO de préstamos fue llamado con cualquier objeto Prestamo
         verify(prestamoDao).save(any(Prestamo.class));
     }
 
@@ -69,33 +79,48 @@ class PrestamoServiceTest {
         prestamoDto.setPlazoMeses(12);
         prestamoDto.setMoneda("P");
 
-        when(scoreCreditService.verifyScore(4633967L)).thenReturn(false);
+        // Configurar el comportamiento del servicio de verificación de score crediticio
+        when(scoreCreditService.verifyScore(4633967L)).thenReturn(false); // Simular que el score crediticio es negativo
 
+        // Llamar al método solicitarPrestamo del servicio de préstamos con el dto creado
         PrestamoResultado result = prestamoService.solicitarPrestamo(prestamoDto);
 
+        // Verificar que el resultado no es nulo
         assertNotNull(result);
+        // Verificar que el estado del préstamo es "RECHAZADO"
         assertEquals(EstadoDelPrestamo.RECHAZADO, result.getEstado());
+        // Verificar que el mensaje de resultado es el esperado
         assertEquals("No cuenta con la puntuacion adecuada para ser beneficiario del prestamo", result.getMensaje());
 
+        // Verificar que el método save del DAO de préstamos NO fue llamado
         verify(prestamoDao, never()).save(any(Prestamo.class));
     }
 
     @Test
     void getPrestamosByClienteSucces() throws ClienteNoEncontradoException, Exception, PrestamoNoExisteException {
         long dni = 4633967L;
+        // Crear una lista de préstamos que se espera que el cliente tenga
         List<Prestamo> prestamos = Arrays.asList(
-                new Prestamo(dni, 7, 1000L, TipoMoneda.PESOS),
-                new Prestamo(dni, 20, 2000L, TipoMoneda.DOLARES)
+                new Prestamo(dni, 7, 1000L, TipoMoneda.PESOS), // Primer préstamo
+                new Prestamo(dni, 20, 2000L, TipoMoneda.DOLARES) // Segundo préstamo
         );
 
-        when(clienteService.buscarClientePorDni(dni)).thenReturn(null); // Simulamos que el cliente existe
+        // Configurar el comportamiento del servicio mockeado
+        // Simular que el cliente con el DNI especificado sí existe
+        when(clienteService.buscarClientePorDni(dni)).thenReturn(null);
+        // Simular que el DAO devuelve la lista de préstamos para el cliente
         when(prestamoDao.getPrestamosByCliente(dni)).thenReturn(prestamos);
 
+        // Llamar al método que se está probando
         List<Prestamo> result = prestamoService.obtenerPrestamoPorDni(dni);
 
+        // Verificar que el resultado no es nulo
         assertNotNull(result);
+        // Verificar que la lista de préstamos tiene el tamaño esperado
         assertEquals(2, result.size());
+        // Verificar que el primer préstamo en la lista tiene el DNI del cliente
         assertEquals(dni, result.get(0).getNumeroCliente());
+        // Verificar que el segundo préstamo en la lista también tiene el DNI del cliente
         assertEquals(dni, result.get(1).getNumeroCliente());
     }
 
@@ -103,8 +128,12 @@ class PrestamoServiceTest {
     void getPrestamosByClienteRechazado() throws ClienteNoEncontradoException, Exception {
         long dni = 4633967L;
 
+        // Configurar el comportamiento del servicio mockeado
+        // Simular que el cliente con el DNI especificado no existe (retorna null)
         when(clienteService.buscarClientePorDni(dni)).thenReturn(null);
 
+        // Verificar que al intentar obtener los préstamos para un cliente inexistente
+        // se lanza una excepción de tipo PrestamoNoExisteException
         assertThrows(PrestamoNoExisteException.class, () -> prestamoService.obtenerPrestamoPorDni(dni));
     }
 
@@ -117,13 +146,20 @@ class PrestamoServiceTest {
         prestamoDto.setPlazoMeses(6);
         prestamoDto.setMoneda("P");
 
+        // Configurar el comportamiento del mock para el servicio de verificación de score
         when(scoreCreditService.verifyScore(4633967L)).thenReturn(true);
+
+        // Configurar el comportamiento de los mocks para el servicio de cliente y cuenta
         doNothing().when(clienteService).agregarPrestamoCliente(any(Prestamo.class), anyLong());
+        // Simular una excepción al intentar actualizar la cuenta
         doThrow(new RuntimeException("Error al actualizar la cuenta")).when(cuentaService).actualizarCuenta(any(Prestamo.class));
 
+        // Ejecutar el método solicitarPrestamo y verificar que se lanza una excepción
         Exception exception = assertThrows(RuntimeException.class, () -> prestamoService.solicitarPrestamo(prestamoDto));
+        // Verificar que el mensaje de la excepción es el esperado
         assertEquals("Error al actualizar la cuenta", exception.getMessage());
 
+        // Verificar que el método save de prestamoDao no fue llamado
         verify(prestamoDao, never()).save(any(Prestamo.class));
     }
 
@@ -135,9 +171,12 @@ class PrestamoServiceTest {
         prestamoDto.setPlazoMeses(6);
         prestamoDto.setMoneda("P");
 
+        // Ejecutar el método solicitarPrestamo y verificar que se lanza una excepción
         MontoMinimoPrestamoException exception = assertThrows(MontoMinimoPrestamoException.class, () -> prestamoService.solicitarPrestamo(prestamoDto));
+        // Verificar que el mensaje de la excepción es el esperado
         assertEquals("El monto del préstamo debe ser mayor a 1000.", exception.getMessage());
 
+        // Verificar que el método save de prestamoDao no fue llamado
         verify(prestamoDao, never()).save(any(Prestamo.class));
     }
 
@@ -149,9 +188,12 @@ class PrestamoServiceTest {
         prestamoDto.setPlazoMeses(2);  // Menor al mínimo permitido
         prestamoDto.setMoneda("P");
 
+        // Ejecutar el método solicitarPrestamo y verificar que se lanza una excepción
         PLazoMesesMaxMixPrestamo exception = assertThrows(PLazoMesesMaxMixPrestamo.class, () -> prestamoService.solicitarPrestamo(prestamoDto));
+        // Verificar que el mensaje de la excepción es el esperado
         assertEquals("El plazo debe estar entre 3 y 120 meses.", exception.getMessage());
 
+        // Verificar que el método save de prestamoDao no fue llamado
         verify(prestamoDao, never()).save(any(Prestamo.class));
     }
 
@@ -163,9 +205,12 @@ class PrestamoServiceTest {
         prestamoDto.setPlazoMeses(6);
         prestamoDto.setMoneda("P");
 
+        // Ejecutar el método solicitarPrestamo y verificar que se lanza una excepción
         NumeroClienteNullPrestamoException exception = assertThrows(NumeroClienteNullPrestamoException.class, () -> prestamoService.solicitarPrestamo(prestamoDto));
+        // Verificar que el mensaje de la excepción es el esperado
         assertEquals("El número de cliente no es válido.", exception.getMessage());
 
+        // Verificar que el método save de prestamoDao no fue llamado
         verify(prestamoDao, never()).save(any(Prestamo.class));
     }
 

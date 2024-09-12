@@ -41,9 +41,6 @@ public class ClienteService {
         if (titular.tieneCuenta(cuenta.getTipoCuenta(), cuenta.getMoneda())) {
             throw new TipoCuentaAlreadyExistsException("El cliente ya posee una cuenta de ese tipo y moneda");
         }
-        if (titular.tieneCuentaMoneda(cuenta.getMoneda())) {
-            throw new TipoCuentaAlreadyExistsException("El cliente ya posee una cuenta de esa moneda");
-        }
         titular.addCuenta(cuenta);
         clienteDao.save(titular);
     }

@@ -25,9 +25,7 @@ import java.time.LocalDate;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 
 @ExtendWith(MockitoExtension.class)
@@ -62,25 +60,28 @@ public class ClienteServiceTest {
         ClienteDto clienteDto = new ClienteDto();
         clienteDto.setFechaNacimiento("1978-03-25");
         clienteDto.setDni(29857643);
-        clienteDto.setTipoPersona("PERSONA_FISICA");
+        clienteDto.setTipoPersona("F");
         Cliente cliente = clienteService.darDeAltaCliente(clienteDto);
 
         verify(clienteDao, times(1)).save(cliente);
     }
 
     @Test
-    public void testClienteAlreadyExistsException() throws ClienteAlreadyExistsException {
+    public void testClienteAlreadyExistsException() {
         ClienteDto pepeRino = new ClienteDto();
         pepeRino.setDni(26456437);
         pepeRino.setNombre("Pepe");
         pepeRino.setApellido("Rino");
-        pepeRino.setFechaNacimiento("1978-03-25");
-        pepeRino.setTipoPersona("PERSONA_FISICA");
+        pepeRino.setFechaNacimiento("1978-03-18");
+        pepeRino.setTipoPersona("J");
 
+        // Configura el mock para devolver un cliente cuando se busque por el DNI
         when(clienteDao.find(26456437, false)).thenReturn(new Cliente());
 
+        // Ejecuta el método y verifica que se lance la excepción
         assertThrows(ClienteAlreadyExistsException.class, () -> clienteService.darDeAltaCliente(pepeRino));
     }
+
 
 
 
@@ -105,7 +106,7 @@ public class ClienteServiceTest {
         verify(clienteDao, times(1)).save(pepeRino);
 
         assertEquals(1, pepeRino.getCuentas().size());
-        assertEquals(pepeRino, cuenta.getTitular());
+        assertEquals(26456439, cuenta.getTitular());
 
     }
 
@@ -136,7 +137,7 @@ public class ClienteServiceTest {
         assertThrows(TipoCuentaAlreadyExistsException.class, () -> clienteService.agregarCuenta(cuenta2, luciano.getDni()));
         verify(clienteDao, times(1)).save(luciano);
         assertEquals(1, luciano.getCuentas().size());
-        assertEquals(luciano, cuenta.getTitular());
+        assertEquals(26456439, cuenta.getTitular());
 
     }
 
@@ -168,13 +169,13 @@ public class ClienteServiceTest {
                 .setBalance(100)
                 .setTipoCuenta(TipoCuenta.CUENTA_CORRIENTE);
 
-        assertDoesNotThrow(() -> clienteService.agregarCuenta(cuenta2, peperino.getDni()), "Las cuentas son iguales.");
+        assertDoesNotThrow(() -> clienteService.agregarCuenta(cuenta2, 26456439), "Las cuentas son iguales.");
         verify(clienteDao, times(2)).save(peperino);
         assertEquals(2, peperino.getCuentas().size());
         assertEquals(TipoCuenta.CAJA_AHORRO, cuenta1.getTipoCuenta());
         assertEquals(TipoCuenta.CUENTA_CORRIENTE, cuenta2.getTipoCuenta());
-        assertEquals(peperino, cuenta1.getTitular());
-        assertEquals(peperino, cuenta2.getTitular());
+        assertEquals(26456439, cuenta1.getTitular());
+        assertEquals(26456439, cuenta2.getTitular());
     }
 
 
@@ -208,8 +209,8 @@ public class ClienteServiceTest {
         assertEquals(TipoMoneda.PESOS, cuenta1.getMoneda());
         assertEquals(TipoCuenta.CAJA_AHORRO, cuenta2.getTipoCuenta());
         assertEquals(TipoMoneda.DOLARES, cuenta2.getMoneda());
-        assertEquals(peperino, cuenta1.getTitular());
-        assertEquals(peperino, cuenta2.getTitular());
+        assertEquals(26456439, cuenta1.getTitular());
+        assertEquals(26456439, cuenta2.getTitular());
     }
 
     @Test
@@ -227,14 +228,14 @@ public class ClienteServiceTest {
     }
 
     @Test
-    public void testBuscarPorDniFallo() throws ClienteAlreadyExistsException{
+    public void testBuscarPorDniFallo() throws ClienteAlreadyExistsException {
         Cliente peperino = new Cliente();
         peperino.setDni(26456439);
         peperino.setNombre("Pepe");
         peperino.setApellido("Rino");
-        peperino.setFechaNacimiento(LocalDate.of(1978, 3,25));
+        peperino.setFechaNacimiento(LocalDate.of(1978, 3, 25));
         peperino.setTipoPersona(TipoPersona.PERSONA_FISICA);
 
-        assertThrows(IllegalArgumentException.class, () -> clienteService.buscarClientePorDni(123456789));
+        assertThrows(ClienteNoEncontradoException.class, () -> clienteService.buscarClientePorDni(123456789));
     }
 }

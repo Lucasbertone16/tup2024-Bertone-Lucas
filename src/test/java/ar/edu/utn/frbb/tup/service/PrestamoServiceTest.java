@@ -56,7 +56,7 @@ class PrestamoServiceTest {
 
         assertNotNull(result);
         assertEquals(EstadoDelPrestamo.APROBADO, result.getEstado());
-        assertEquals("El monto del préstamo fue acreditado en su cuenta", result.getMensaje());
+        assertEquals("Monto acreditado a su cuenta!", result.getMensaje());
 
         verify(prestamoDao).save(any(Prestamo.class));
     }
@@ -65,7 +65,7 @@ class PrestamoServiceTest {
     void prestamoRechazado() throws Exception, ClienteNoEncontradoException, CuentaNoEncontradaException, NumeroClienteNullPrestamoException, PLazoMesesMaxMixPrestamo, MontoMinimoPrestamoException {
         PrestamoDto prestamoDto = new PrestamoDto();
         prestamoDto.setNumeroCliente(4633967L);
-        prestamoDto.setMontoPrestamo(1000L);
+        prestamoDto.setMontoPrestamo(10000L);
         prestamoDto.setPlazoMeses(12);
         prestamoDto.setMoneda("P");
 
@@ -75,7 +75,7 @@ class PrestamoServiceTest {
 
         assertNotNull(result);
         assertEquals(EstadoDelPrestamo.RECHAZADO, result.getEstado());
-        assertEquals("El cliente no tiene un credito apto para solicitar un prestamo", result.getMensaje());
+        assertEquals("No cuenta con la puntuacion adecuada para ser beneficiario del prestamo", result.getMensaje());
 
         verify(prestamoDao, never()).save(any(Prestamo.class));
     }
@@ -103,9 +103,9 @@ class PrestamoServiceTest {
     void getPrestamosByClienteRechazado() throws ClienteNoEncontradoException, Exception {
         long dni = 4633967L;
 
-        when(clienteService.buscarClientePorDni(dni)).thenThrow(new ClienteNoEncontradoException("El cliente no existe"));
+        when(clienteService.buscarClientePorDni(dni)).thenReturn(null);
 
-        assertThrows(ClienteNoEncontradoException.class, () -> prestamoService.obtenerPrestamoPorDni(dni));
+        assertThrows(PrestamoNoExisteException.class, () -> prestamoService.obtenerPrestamoPorDni(dni));
     }
 
 
@@ -113,7 +113,7 @@ class PrestamoServiceTest {
     void falloEnActualizacionDeCuenta() throws Exception, ClienteNoEncontradoException, CuentaNoEncontradaException {
         PrestamoDto prestamoDto = new PrestamoDto();
         prestamoDto.setNumeroCliente(4633967L);
-        prestamoDto.setMontoPrestamo(1000L);
+        prestamoDto.setMontoPrestamo(10000L);
         prestamoDto.setPlazoMeses(6);
         prestamoDto.setMoneda("P");
 

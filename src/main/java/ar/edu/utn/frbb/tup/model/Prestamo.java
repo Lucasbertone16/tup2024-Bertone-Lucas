@@ -27,6 +27,7 @@ public class Prestamo {
         this.saldoRestante = this.montoConIntereses;
         this.moneda = moneda;
     }
+
     //Constructor del Dto con interes calculado
     public Prestamo(PrestamoDto prestamoDto) {
         this(prestamoDto.getNumeroCliente(), prestamoDto.getPlazoMeses(), prestamoDto.getMontoPrestamo(), TipoMoneda.fromString(prestamoDto.getMoneda()));

@@ -13,6 +13,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -80,7 +81,7 @@ class PrestamoServiceTest {
     }
 
     @Test
-    void getPrestamosByClienteSucces() throws ClienteNoEncontradoException, Exception {
+    void getPrestamosByClienteSucces() throws ClienteNoEncontradoException, Exception, PrestamoNoExisteException {
         long dni = 4633967L;
         List<Prestamo> prestamos = Arrays.asList(
                 new Prestamo(dni, 7, 1000L, TipoMoneda.PESOS),
@@ -166,5 +167,22 @@ class PrestamoServiceTest {
         assertEquals("El número de cliente no es válido.", exception.getMessage());
 
         verify(prestamoDao, never()).save(any(Prestamo.class));
+    }
+
+    @Test
+    void getPrestamosByClienteSinPrestamos() throws ClienteNoEncontradoException, Exception {
+        long dni = 29857643;
+
+        // Simulamos que el cliente existe
+        when(clienteService.buscarClientePorDni(dni)).thenReturn(null);
+
+        // Simulamos que no tiene préstamos
+        when(prestamoDao.getPrestamosByCliente(dni)).thenReturn(Collections.emptyList());
+
+        // Verificamos que se lanza la excepción PrestamosNoEncontradosException
+        PrestamoNoExisteException exception = assertThrows(PrestamoNoExisteException.class, () -> prestamoService.obtenerPrestamoPorDni(dni));
+
+        // Validamos el mensaje de la excepción
+        assertEquals("El cliente no tiene préstamos", exception.getMessage());
     }
 }

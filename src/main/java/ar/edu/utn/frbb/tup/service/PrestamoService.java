@@ -63,7 +63,12 @@ public class PrestamoService {
     }
 
     //Buscamos los prestamos que tiene la persona por dni
-    public List<Prestamo> obtenerPrestamoPorDni(long dni) throws Exception, ClienteNoEncontradoException {
+    public List<Prestamo> obtenerPrestamoPorDni(long dni) throws Exception, ClienteNoEncontradoException, PrestamoNoExisteException {
+        List<Prestamo> prestamos = prestamoDao.getPrestamosByCliente(dni);
+        if (prestamos.isEmpty()) {
+            // Lanzar una excepción si no tiene préstamos
+            throw new PrestamoNoExisteException("El cliente no tiene préstamos");
+        }
         clienteService.buscarClientePorDni(dni);
         return prestamoDao.getPrestamosByCliente(dni);
     }

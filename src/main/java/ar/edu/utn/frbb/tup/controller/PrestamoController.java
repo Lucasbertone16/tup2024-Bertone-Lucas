@@ -2,6 +2,7 @@ package ar.edu.utn.frbb.tup.controller;
 
 import ar.edu.utn.frbb.tup.controller.dto.PrestamoDto;
 import ar.edu.utn.frbb.tup.model.Prestamo;
+import ar.edu.utn.frbb.tup.model.exception.PrestamoNoExisteException;
 import ar.edu.utn.frbb.tup.controller.validator.PrestamoValidator;
 import ar.edu.utn.frbb.tup.model.PrestamoResultado;
 import ar.edu.utn.frbb.tup.model.exception.*;
@@ -13,7 +14,7 @@ import org.springframework.web.server.ResponseStatusException;
 import java.util.List;
 
 @RestController
-@RequestMapping("/prestamo")
+@RequestMapping("/api/prestamo")
 public class PrestamoController {
 
     @Autowired
@@ -29,7 +30,11 @@ public class PrestamoController {
         } catch (ClienteNoEncontradoException e) {
             // Maneja el caso de cliente no encontrado devolviendo 404
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage(), e);
-        } catch (Exception e) {
+        }catch (PrestamoNoExisteException e) {
+            // Prestamo no encontrado devolviendo 404
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage(), e);
+        }
+        catch (Exception e) {
             // Manejo genérico de errores devolviendo 500
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Error inesperado", e);
         }
